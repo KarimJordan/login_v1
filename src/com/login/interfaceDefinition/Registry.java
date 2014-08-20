@@ -19,17 +19,20 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.login.databaseConnection.DataBaseDriverManager;
 import com.login.entity.Student;
 
 public class Registry implements ActionListener{
 	
 	private Student studentProfile;
+	private DataBaseDriverManager databaseManager;
 	private BufferedImage picture;
 	public int item;
 	
@@ -100,12 +103,22 @@ public class Registry implements ActionListener{
 		
 		//picture = new BufferedImage(0, 0, (Integer) null);
 		studentProfile = new Student();
+		databaseManager = new DataBaseDriverManager();
+		
 		frmRegistry.setResizable(false);
 		frmRegistry.setTitle("Registry");
 		frmRegistry.setBounds(100, 100, 460, 600);
 		frmRegistry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				insertStudentActionPerformed(arg0);
+			}
+		});
 		btnSave.setFont(new Font("Verdana", Font.BOLD, 14));
 		
 		btnCancel = new JButton("Cancel");
@@ -158,7 +171,7 @@ public class Registry implements ActionListener{
 		txtLastName.setColumns(10);
 		
 		txtRFIDNum = new JTextField();
-		txtRFIDNum.setEditable(false);
+		//txtRFIDNum.setEditable(false);
 		txtRFIDNum.setText("sasas");
 		txtRFIDNum.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtRFIDNum.setColumns(10);
@@ -315,11 +328,11 @@ public class Registry implements ActionListener{
 		}else if(source.equals(btnFileMenu)){
 			item = fcChoosePic.showOpenDialog(frmRegistry);
 			studentProfile.setImagePath(String.valueOf(fcChoosePic.getSelectedFile()));
-			txtFileLocation.setText(studentProfile.getImagePath());
+			
 			if(item == fcChoosePic.APPROVE_OPTION)
 			{
 				System.out.println(txtFileLocation.getText());
-				
+				txtFileLocation.setText(studentProfile.getImagePath());
 				try {
 					picture = ImageIO.read(new File(txtFileLocation.getText()));
 					//pic_label.setText("SAKSJA");
@@ -329,8 +342,43 @@ public class Registry implements ActionListener{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}else if(item == fcChoosePic.CANCEL_OPTION)
+			{
+				JOptionPane.showMessageDialog(null, "Operation Cancelled", "Operation Cancelled", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+		
+	}
+	
+	
+	private void insertStudentActionPerformed(ActionEvent evt){
+		
+		int result = databaseManager.addStudent(txtRFIDNum.getText(), 
+				txtFirstName.getText(), 
+				txtLastName.getText(), 
+				txtYearLevel.getText(), 
+				txtFileLocation.getText(), 
+				txtParentName.getText(), 
+				txtCellNum.getText());
+		
+		/*System.out.println(txtRFIDNum.getText());
+		System.out.println(txtFirstName.getText());
+		System.out.println(txtLastName.getText());
+		System.out.println(txtYearLevel.getText());
+		System.out.println(txtFileLocation.getText());
+		System.out.println(txtParentName.getText());
+		System.out.println(txtCellNum.getText());*/
+		
+		
+		if(result == 1)
+		{
+			JOptionPane.showMessageDialog(null, "Student Added", "Student Successfully Added!", JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			JOptionPane.showMessageDialog(null, "Student Not Added", "Unsuccessful!", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void selectStudentActionPerformed(ActionEvent evt){
 		
 	}
 }

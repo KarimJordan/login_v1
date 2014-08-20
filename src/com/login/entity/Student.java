@@ -10,6 +10,17 @@ public class Student {
 	private String parentName;
 	private String parentCellNumber;
 	
+	public Student()
+	{}
+	
+	public Student(String studentFirstName, String studentLastName, String yearLevel, String imagePath)
+	{
+		setStudentFirstName(studentFirstName);
+		setStudentLastName(studentLastName);
+		setYearLevel(yearLevel);
+		setImagePath(imagePath);
+	}
+	
 	public String getRFIDNumber() {
 		return RFIDNumber;
 	}

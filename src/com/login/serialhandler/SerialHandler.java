@@ -30,7 +30,7 @@ public class SerialHandler {
 	SerialPort serialPort;
 	Serial serialHandling;
 	
-	private static final String PORT_NAMES[] = {"COM3","COM4","COM5","COM6"};
+	private static final String PORT_NAMES[] = {"COM3","COM4","COM5","COM6", "COM18"};
 	private static final int TIME_OUT = 2000;
 	private static final int DATA_RATE = 19200;
 	
