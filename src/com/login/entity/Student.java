@@ -16,9 +16,9 @@ public class Student {
 	public Student(String studentFirstName, String studentLastName, String yearLevel, String imagePath)
 	{
 		setStudentFirstName(studentFirstName);
-		setStudentLastName(studentLastName);
+		//setStudentLastName(studentLastName);
 		setYearLevel(yearLevel);
-		setImagePath(imagePath);
+		//setImagePath(imagePath);
 	}
 	
 	public String getRFIDNumber() {

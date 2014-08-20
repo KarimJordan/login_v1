@@ -5,9 +5,13 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.font.NumericShaper;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.Currency;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -21,6 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+
+import com.login.databaseConnection.DataBaseDriverManager;
+import com.login.entity.Student;
 
 public class LoginInterface implements ActionListener{
 
@@ -42,6 +49,12 @@ public class LoginInterface implements ActionListener{
 	private JMenuItem mntmRegister;
 	private JMenuItem mntmExit;
 	private JMenuItem mntmAbout;
+	
+	private List<Student> results;
+	private Student student;
+	private int numberOfEntries = 0;
+	private int currentEntries;
+	private DataBaseDriverManager databaseDriverManager;
 	
 
 	/**
@@ -81,6 +94,10 @@ public class LoginInterface implements ActionListener{
 	 * @throws IOException 
 	 */
 	private void initialize(){
+		
+		databaseDriverManager = new DataBaseDriverManager();
+		student = new Student();
+		
 		frmLoginSystem = new JFrame();
 		frmLoginSystem.setTitle("Login System");
 		frmLoginSystem.setBounds(100, 100, 650, 510);
@@ -218,7 +235,15 @@ public class LoginInterface implements ActionListener{
 			mntmRegister.setEnabled(true);
 			}
 		}else if(source == mntmExit){
-			System.exit(0);
+			//System.exit(0);
+			results = databaseDriverManager.getStudentInfo("123");
+			numberOfEntries = results.size();
+			if(numberOfEntries != 0){
+				currentEntries = 0;
+				student = results.get(currentEntries);
+				System.out.println(student.getStudentFirstName());
+				System.out.println(student.getYearLevel());
+			}
 		}else if(source == mntmAbout){
 			JOptionPane.showMessageDialog(null, 
 					"Developed For Wesleyan University Login System", 
@@ -237,6 +262,18 @@ public class LoginInterface implements ActionListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void displayStudenInfo(ActionEvent evt)
+	{
+		results = databaseDriverManager.getStudentInfo("123");
+		numberOfEntries = results.size();
+		if(numberOfEntries != 0){
+			currentEntries = 0;
+			student = results.get(currentEntries);
+			System.out.println(student.getStudentFirstName());
+			System.out.println(student.getYearLevel());
 		}
 	}
 }

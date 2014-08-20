@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -34,6 +36,7 @@ public class Registry implements ActionListener{
 	private Student studentProfile;
 	private DataBaseDriverManager databaseManager;
 	private BufferedImage picture;
+	private List<Student> results;
 	public int item;
 	
 	public JFrame frmRegistry;
@@ -376,9 +379,5 @@ public class Registry implements ActionListener{
 		}else{
 			JOptionPane.showMessageDialog(null, "Student Not Added", "Unsuccessful!", JOptionPane.ERROR_MESSAGE);
 		}
-	}
-	
-	private void selectStudentActionPerformed(ActionEvent evt){
-		
 	}
 }

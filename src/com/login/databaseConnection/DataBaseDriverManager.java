@@ -28,10 +28,14 @@ public class DataBaseDriverManager {
 	
 	private PreparedStatement selectFromStudents = null;
 	private PreparedStatement insertIntoStudents = null;
-	private String selectFromStudentsQuery = "SELECT STUDENT_FIRST_NAME, STUDENT_LAST_NAME, YEAR_LEVEL FROM STUDENTS" +
+	private PreparedStatement insertAttendance = null;
+	private PreparedStatement queryAttendance = null;
+	private String selectFromStudentsQuery = "SELECT STUDENT_FIRST_NAME, STUDENT_LAST_NAME, YEAR_LEVEL FROM STUDENTS " +
 			"WHERE RFID_Number = ?";
 	private String insertInfoStudentsQuery = "INSERT INTO STUDENTS (RFID_Number, STUDENT_FIRST_NAME, " +
 			"STUDENT_LAST_NAME, YEAR_LEVEL, IMAGE_PATH, PARENT_NAME, PARENT_CELL_NUM) VALUES (?,?,?,?,?,?,?)";
+	private String insertAttendanceQuery = "INSERT INTO STUDENTS (ATTENDANCE) VALUES (?) WHERE RFID_Number = ?";
+	private String queryAttendanceQuery = "SELECT ATTENDANCE FROM STUDENTS WHERE RFID_Number = ?";
 	
 	//query sample
 	private String queryStudent = "SELECT * FROM SCH_DELIVERY_INFO_EVENT";
@@ -43,6 +47,8 @@ public class DataBaseDriverManager {
 		
 			selectFromStudents = connection.prepareStatement(selectFromStudentsQuery);
 			insertIntoStudents = connection.prepareStatement(insertInfoStudentsQuery);
+			insertAttendance = connection.prepareStatement(insertAttendanceQuery);
+			queryAttendance = connection.prepareStatement(queryAttendanceQuery);
 		
 			if(connection != null){
 				System.out.println("Successful Connection");
@@ -83,7 +89,7 @@ public class DataBaseDriverManager {
 		
 		try{
 			
-			selectFromStudents.setString(0, RFIDNumber);
+			selectFromStudents.setString(1, RFIDNumber);
 			
 			resultSet = selectFromStudents.executeQuery();
 			results = new ArrayList<Student>();
@@ -91,10 +97,10 @@ public class DataBaseDriverManager {
 			while(resultSet.next())
 			{
 				results.add(new Student(
-						resultSet.getString("studentFirstName"),
-						resultSet.getString("studentLastName"),
-						resultSet.getString("yearLevel"),
-						resultSet.getString("imagePath")
+						resultSet.getString("STUDENT_FIRST_NAME"),
+						resultSet.getString("STUDENT_LAST_NAME"),
+						resultSet.getString("YEAR_LEVEL"),
+						resultSet.getString("IMAGE_PATH")
 						));
 			}
 			
@@ -131,6 +137,17 @@ public class DataBaseDriverManager {
 		}catch(SQLException e){
 			e.printStackTrace();
 			close();
+		}
+		return result;
+	}
+	
+	public int addAttendance(int attendance)
+	{
+		int result = 0;
+		try{
+			insertAttendance.setInt(1, attendance);
+		}catch(SQLException e){
+			e.printStackTrace();
 		}
 		return result;
 	}
