@@ -1,9 +1,12 @@
 package com.login.interfaceDefinition;
 
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -35,7 +38,9 @@ public class Registry implements ActionListener{
 	
 	private Student studentProfile;
 	private DataBaseDriverManager databaseManager;
-	private BufferedImage picture;
+	private BufferedImage convert;
+	private BufferedImage  img1;
+	private BufferedImage resize;
 	private List<Student> results;
 	public int item;
 	
@@ -336,11 +341,13 @@ public class Registry implements ActionListener{
 			{
 				System.out.println(txtFileLocation.getText());
 				txtFileLocation.setText(studentProfile.getImagePath());
+				File file = fcChoosePic.getSelectedFile();
+				BufferedImage picture = null;
 				try {
-					picture = ImageIO.read(new File(txtFileLocation.getText()));
-					//pic_label.setText("SAKSJA");
-					//picture_panel.add(pic_label);
-					//picture_panel.setBackground(ImageIO.read(new File(txtFileLocation.getText())));
+					picture = ImageIO.read(file);
+					Image dmg = picture.getScaledInstance(picture_panel.getWidth(), picture_panel.getHeight()-10,Image.SCALE_SMOOTH);
+					System.out.println(picture_panel.getHeight());
+					pic_label.setIcon(new ImageIcon(dmg));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -380,4 +387,6 @@ public class Registry implements ActionListener{
 			JOptionPane.showMessageDialog(null, "Student Not Added", "Unsuccessful!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	
 }
