@@ -84,6 +84,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	private JLabel lblStudentName;
 	public JLabel lblYear;
 	private JLabel lblPictureLabel;
+	private JLabel lblLogoLabel;
 	
 	private JMenuBar menuBar;
 	private JMenu mnSystem;
@@ -118,6 +119,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 					registry = new Registry();
 					//serial = new SerialHandler();
 					window.frmLoginSystem.setVisible(true);
+					window.frmLoginSystem.setBackground(Color.GREEN);
 					window.begin();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -148,94 +150,64 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	 */
 	private void initialize(){
 		
-		/*CommPortIdentifier portId = null;
-		Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
-
-		// First, Find an instance of serial port as set in PORT_NAMES.
-		while (portEnum.hasMoreElements()) {
-			CommPortIdentifier currPortId = (CommPortIdentifier) portEnum
-					.nextElement();
-			for (String portName : PORT_NAMES) {
-				if (currPortId.getName().equals(portName)) {
-					portId = currPortId;
-					break;
-				}
-			}
-		}
-		if (portId == null) {
-			JOptionPane.showMessageDialog(null, "Connect Device!",
-					"Please Connect Device!", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-
-		try {
-			// open serial port, and use class name for the appName.
-			serialPort = (SerialPort) portId.open(this.getClass().getName(),
-					TIME_OUT);
-
-			// set port parameters
-			serialPort.setSerialPortParams(DATA_RATE, SerialPort.DATABITS_8,
-					SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-
-			// open the streams
-			input = new BufferedReader(new InputStreamReader(
-					serialPort.getInputStream()));
-			output = serialPort.getOutputStream();
-			char ch = 1;
-			output.write(ch);
-			printStream = new PrintStream(output);
-
-			// add event listeners
-			serialPort.addEventListener(new SerialPortEventListener() {
-				
-				@Override
-				public void serialEvent(SerialPortEvent arg0) {
-					// TODO Auto-generated method stub
-					if (arg0.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-					try {
-						inputLine = input.readLine();
-						System.out.println(inputLine);
-						txtRFIDNumberField.setText(inputLine);
-						inputLine = "";
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						}
-					}
-				}
-			});
-			serialPort.notifyOnDataAvailable(true);
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
-		*/
 		databaseDriverManager = new DataBaseDriverManager();
 		student = new Student();
 		
 		frmLoginSystem = new JFrame();
 		frmLoginSystem.setTitle("Login System");
-		frmLoginSystem.setBounds(100, 100, 650, 510);
+		frmLoginSystem.setBounds(100, 100, 670, 510);
 		frmLoginSystem.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frmLoginSystem.setExtendedState(frmLoginSystem.getExtendedState() | frmLoginSystem.MAXIMIZED_BOTH);
+		frmLoginSystem.getContentPane().setBackground(Color.GREEN.darker().darker());
+		frmLoginSystem.setExtendedState(frmLoginSystem.getExtendedState() | frmLoginSystem.MAXIMIZED_BOTH);
+		//frmLoginSystem.setResizable(false);
 		
 		logo_panel = new JPanel();
-		logo_panel.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+		logo_panel.setBackground(Color.GREEN.darker().darker());
+		//logo_panel.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
+		System.out.println(logo_panel.getHeight() + " " + logo_panel.getWidth());
+		lblLogoLabel = new JLabel();
+		//File file = new File("C:\\Users\\Karim\\Desktop\\docs\\thesis\\Parking_System\\login_v1\\newlogo.png");
+		File file = new File(".\\image\\newlogo.png");
+		BufferedImage logoPic = null;
+		try {
+			logoPic = ImageIO.read(file);
+			Image dmg = logoPic.getScaledInstance(470, 130, Image.SCALE_SMOOTH);
+			lblLogoLabel.setIcon(new ImageIcon(dmg));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		lblLogoLabel.setSize(logo_panel.getWidth(), logo_panel.getHeight());
+		logo_panel.add(lblLogoLabel);
 		
 		picture_panel = new JPanel();
-		picture_panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		//picture_panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblPictureLabel = new JLabel();
+		File person = new File(".\\image\\person.png");
+		BufferedImage personLogo = null;
+		try {
+			personLogo = ImageIO.read(person);
+			Image dmg = personLogo.getScaledInstance(240, 190, Image.SCALE_SMOOTH);
+			lblPictureLabel.setIcon(new ImageIcon(dmg));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		picture_panel.setBackground(Color.GREEN.darker().darker());
 		picture_panel.add(lblPictureLabel);
 		
 		info_panel = new JPanel();
-		info_panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		info_panel.setBackground(Color.GREEN.darker().darker());
+		//info_panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		lblCurrentTime = new JLabel("SAMPLE");
+		lblCurrentTime.setForeground(Color.black.darker());
 		lblCurrentTime.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCurrentTime.setFont(new Font("Verdana", Font.BOLD, 40));
 		
 		txtRFIDNumberField = new JTextField();
 		txtRFIDNumberField.setColumns(10);
-		//txtRFIDNumberField.setVisible(false);
+		txtRFIDNumberField.setVisible(false);
 		//txtRFIDNumberField.setEnabled(false);
 		txtRFIDNumberField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -249,7 +221,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			public void insertUpdate(DocumentEvent arg0) {
 				// TODO Auto-generated method stub
 				
-				new Thread(new Runnable() {
+			new Thread(new Runnable() {
 					
 					@Override
 					public void run() {
@@ -308,19 +280,23 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		
 		lblName = new JLabel("Name:");
 		lblName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblName.setFont(new Font("Verdana", Font.BOLD, 16));
+		lblName.setForeground(Color.black.darker());
+		lblName.setFont(new Font("Verdana", Font.BOLD, 20));
 		
 		lblYearLevel  = new JLabel("Year Level:");
 		lblYearLevel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblYearLevel.setFont(new Font("Verdana", Font.BOLD, 16));
+		lblYearLevel.setForeground(Color.black.darker());
+		lblYearLevel.setFont(new Font("Verdana", Font.BOLD, 20));
 		
 		lblStudentName = new JLabel("Juan Dela Cruz");
 		lblStudentName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblStudentName.setFont(new Font("Verdana", Font.BOLD, 16));
+		lblStudentName.setForeground(Color.black.darker());
+		lblStudentName.setFont(new Font("Verdana", Font.BOLD, 20));
 		
 		lblYear = new JLabel();
 		lblYear.setHorizontalAlignment(SwingConstants.CENTER);
-		lblYear.setFont(new Font("Verdana", Font.BOLD, 16));
+		lblYear.setForeground(Color.black.darker());
+		lblYear.setFont(new Font("Verdana", Font.BOLD, 20));
 		GroupLayout gl_info_panel = new GroupLayout(info_panel);
 		gl_info_panel.setHorizontalGroup(
 			gl_info_panel.createParallelGroup(Alignment.LEADING)
@@ -334,8 +310,8 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 						.addGroup(gl_info_panel.createSequentialGroup()
 							.addGap(33)
 							.addGroup(gl_info_panel.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblStudentName, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblYear, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))))
+								.addComponent(lblStudentName, GroupLayout.PREFERRED_SIZE, 280, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblYear, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))))
 					.addContainerGap(42, Short.MAX_VALUE))
 		);
 		gl_info_panel.setVerticalGroup(
@@ -383,6 +359,16 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		if(source == mntmRegister)
 		{
 			registry.frmRegistry.setVisible(true);
+			File person = new File(".\\image\\person.png");
+			BufferedImage personLogo = null;
+			try {
+				personLogo = ImageIO.read(person);
+				Image dmg = personLogo.getScaledInstance(200, 150, Image.SCALE_SMOOTH);
+				registry.pic_label.setIcon(new ImageIcon(dmg));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}else if(source == mntmExit){
 			System.exit(0);
 		}else if(source == mntmAbout){
@@ -411,19 +397,8 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}
 	}
 	
-	@SuppressWarnings("static-access")
 	private void sendToArduino()
 	{
-		/*//SerialHandler serial = new SerialHandler();
-		String cellNumber;
-		
-		cellNumber = student.getParentCellNumber();
-		serial.initialize();
-		serial.sendData("ON");
-		//serial.printIn("ON");
-		serial.close();*/
-		/*printStream.println("WOW");
-		close();*/
 		try {
 			serialOut.write(parentCell.getBytes());
 		} catch (IOException e) {
@@ -438,6 +413,18 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		if(results.isEmpty())
 		{
 			JOptionPane.showMessageDialog(null, "Student Not Registered!", "Unregistered Student", JOptionPane.ERROR_MESSAGE);
+			parentCell = "";
+			registry.frmRegistry.setVisible(true);
+			File person = new File(".\\image\\person.png");
+			BufferedImage personLogo = null;
+			try {
+				personLogo = ImageIO.read(person);
+				Image dmg = personLogo.getScaledInstance(200, 150, Image.SCALE_SMOOTH);
+				registry.pic_label.setIcon(new ImageIcon(dmg));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}else{
 		numberOfEntries = results.size();
 		if(numberOfEntries != 0){
@@ -447,9 +434,10 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			BufferedImage picture = null;
 			try {
 				picture = ImageIO.read(file);
-				Image dmg = picture.getScaledInstance(288, 218, Image.SCALE_SMOOTH);
+				//Image dmg = picture.getScaledInstance(288, 200, Image.SCALE_SMOOTH);
+				Image dmg = picture.getScaledInstance(300, 240, Image.SCALE_SMOOTH);
+				System.out.println(picture_panel.getHeight() + " " + picture_panel.getWidth());
 				lblPictureLabel.setIcon(new ImageIcon(dmg));
-				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -487,21 +475,24 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			Thread.sleep(15000);
 			lblStudentName.setText("Student Name");
 			lblYear.setText("Year Level");
-			lblPictureLabel.setIcon(null);
-			sendToArduino();
-			//System.out.println(parentCell);
-			/*try {
-				serialOut.write("L1".getBytes());
+			File person = new File(".\\image\\person.png");
+			BufferedImage personLogo = null;
+			try {
+				personLogo = ImageIO.read(person);
+				Image dmg = personLogo.getScaledInstance(240, 190, Image.SCALE_SMOOTH);
+				lblPictureLabel.setIcon(new ImageIcon(dmg));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}*/
+			}
+			sendToArduino();
+			//close();
 		}catch(InterruptedException e){
 			e.printStackTrace();
 		}
 	}
 	//code
-	public synchronized void close() {
+	public void close() {
 		if (serialPort != null) {
 			serialPort.removeEventListener();
 			serialPort.close();
@@ -521,17 +512,14 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		serialPort.notifyOnDataAvailable(true);
 	}
 	
-	private void dataInput(String value)
-	{
-		
-	}
-	
 	@Override
 	public void serialEvent(SerialPortEvent arg0) {
 		// TODO Auto-generated method stub
 		try{
 			String line = serialReader.readLine();
 			System.out.println(line);
+			registry.txtRFIDNum.setText(line);
+			txtRFIDNumberField.setText(line);
 			//if(line.en)
 		}catch(IOException e)
 		{

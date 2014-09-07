@@ -1,5 +1,7 @@
 package com.login.interfaceDefinition;
 
+import gnu.io.SerialPort;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -37,6 +39,7 @@ import com.login.entity.Student;
 public class Registry implements ActionListener{
 	
 	private Student studentProfile;
+	private LoginInterface interfaced = new LoginInterface();
 	private DataBaseDriverManager databaseManager;
 	private BufferedImage convert;
 	private BufferedImage  img1;
@@ -48,7 +51,7 @@ public class Registry implements ActionListener{
 	
 	private JTextField txtFirstName;
 	private JTextField txtLastName;
-	private JTextField txtRFIDNum;
+	public JTextField txtRFIDNum;
 	private JTextField txtYearLevel;
 	private JTextField txtParentName;
 	private JTextField txtCellNum;
@@ -69,7 +72,7 @@ public class Registry implements ActionListener{
 	private JLabel lblYearLevel;
 	private JLabel lblParentName;
 	private JLabel lblParentCellNum;
-	private JLabel pic_label;
+	public JLabel pic_label;
 	
 	/**
 	 * Launch the application.
@@ -79,6 +82,7 @@ public class Registry implements ActionListener{
 			public void run() {
 				try {
 					Registry window = new Registry();
+					
 					window.frmRegistry.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -126,6 +130,7 @@ public class Registry implements ActionListener{
 		frmRegistry.setResizable(false);
 		frmRegistry.setTitle("Registry");
 		frmRegistry.setBounds(100, 100, 500, 600);
+		//frmRegistry.getContentPane().setBackground(Color.GREEN.darker().darker());
 		frmRegistry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		btnSave = new JButton("Save");
@@ -144,6 +149,7 @@ public class Registry implements ActionListener{
 		btnCancel.setFont(new Font("Tahoma", Font.BOLD, 14));
 		
 		information_panel = new JPanel();
+		//information_panel.setBackground(Color.GREEN.darker().darker());
 		information_panel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		GroupLayout groupLayout = new GroupLayout(frmRegistry.getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -173,6 +179,7 @@ public class Registry implements ActionListener{
 		);
 		
 		lblFirstName = new JLabel("First Name:");
+		lblFirstName.setForeground(Color.black.darker());
 		lblFirstName.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		txtFirstName = new JTextField();
@@ -181,6 +188,7 @@ public class Registry implements ActionListener{
 		txtFirstName.setColumns(10);
 		
 		lblLastName = new JLabel("Last Name:");
+		lblLastName.setForeground(Color.black.darker());
 		lblLastName.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		txtLastName = new JTextField();
@@ -189,7 +197,8 @@ public class Registry implements ActionListener{
 		txtLastName.setColumns(10);
 		
 		txtRFIDNum = new JTextField();
-		//txtRFIDNum.setEditable(false);
+		txtRFIDNum.setEditable(false);
+		//txtRFIDNum.setText();
 		txtRFIDNum.setText("");
 		txtRFIDNum.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtRFIDNum.setColumns(10);
@@ -200,9 +209,11 @@ public class Registry implements ActionListener{
 		txtYearLevel.setColumns(10);
 		
 		lblRfidNum = new JLabel("RFID Num:");
+		lblRfidNum.setForeground(Color.black.darker());
 		lblRfidNum.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		lblYearLevel = new JLabel("Year Level:");
+		lblYearLevel.setForeground(Color.black.darker());
 		lblYearLevel.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		txtParentName = new JTextField();
@@ -216,14 +227,27 @@ public class Registry implements ActionListener{
 		txtCellNum.setColumns(10);
 		
 		lblParentName = new JLabel("Parent Name:");
+		lblParentName.setForeground(Color.black.darker());
 		lblParentName.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		lblParentCellNum = new JLabel("Parent Cell Num:");
+		lblParentCellNum.setForeground(Color.black.darker());
 		lblParentCellNum.setFont(new Font("Times New Roman", Font.BOLD, 17));
 
 		picture_panel = new JPanel();
+		//picture_panel.setBackground(Color.GREEN.darker().darker());
+		File person = new File(".\\image\\person.png");
+		BufferedImage personLogo = null;
+		try {
+			personLogo = ImageIO.read(person);
+			Image dmg = personLogo.getScaledInstance(200, 150, Image.SCALE_SMOOTH);
+			pic_label.setIcon(new ImageIcon(dmg));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		picture_panel.add(pic_label);
-		picture_panel.setBorder(new LineBorder(Color.GRAY));
+		//picture_panel.setBorder(new LineBorder(Color.GRAY));
 			
 		
 		txtFileLocation = new JTextField();
