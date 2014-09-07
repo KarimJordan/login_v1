@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.login.entity.Student;
 
 public class DataBaseDriverManager {
@@ -30,7 +32,7 @@ public class DataBaseDriverManager {
 	private PreparedStatement insertIntoStudents = null;
 	private PreparedStatement insertAttendance = null;
 	private PreparedStatement queryAttendance = null;
-	private String selectFromStudentsQuery = "SELECT STUDENT_FIRST_NAME, STUDENT_LAST_NAME, YEAR_LEVEL FROM STUDENTS " +
+	private String selectFromStudentsQuery = "SELECT * FROM STUDENTS " +
 			"WHERE RFID_Number = ?";
 	private String insertInfoStudentsQuery = "INSERT INTO STUDENTS (RFID_Number, STUDENT_FIRST_NAME, " +
 			"STUDENT_LAST_NAME, YEAR_LEVEL, IMAGE_PATH, PARENT_NAME, PARENT_CELL_NUM) VALUES (?,?,?,?,?,?,?)";
@@ -60,28 +62,6 @@ public class DataBaseDriverManager {
 		}
 	}
 	
-	/*public void establishConnection() throws SQLException{
-		try{
-		Class.forName(connectionMySQLDriver);
-		}catch(ClassNotFoundException e){
-			e.getMessage();
-		}
-	
-			this.connection = DriverManager.getConnection(connectionURLMySQL, connectionNameMySQL, connectionPasswordMySQL);
-			
-			PreparedStatement selectFromStudents = connection.prepareStatement(selectFromStudentsQuery);
-			PreparedStatement insertIntoStudents = connection.prepareStatement(insertInfoStudentsQuery);
-			
-		
-		
-		if(connection != null){
-			System.out.println("Successful Connection");
-		}else{
-			System.out.println("Connection Failed");
-		}
-			
-	}*/
-	
 	public List<Student> getStudentInfo(String RFIDNumber)
 	{
 		List<Student> results = null;
@@ -100,7 +80,10 @@ public class DataBaseDriverManager {
 						resultSet.getString("STUDENT_FIRST_NAME"),
 						resultSet.getString("STUDENT_LAST_NAME"),
 						resultSet.getString("YEAR_LEVEL"),
-						resultSet.getString("IMAGE_PATH")
+						resultSet.getString("IMAGE_PATH"),
+						resultSet.getString("PARENT_NAME"),
+						resultSet.getString("PARENT_CELL_NUM"),
+						resultSet.getInt("ATTENDANCE")
 						));
 			}
 			
@@ -108,9 +91,6 @@ public class DataBaseDriverManager {
 			e.printStackTrace();
 			close();
 		}
-		
-		System.out.println(results.get(0));
-		
 		return results;
 	}
 	
@@ -123,20 +103,23 @@ public class DataBaseDriverManager {
 			String parentCellNum)
 	{
 		int result = 0;
-		
-		try{
-			insertIntoStudents.setString(1, rfidNumber);
-			insertIntoStudents.setString(2, studentFirstName);
-			insertIntoStudents.setString(3, studentLastName);
-			insertIntoStudents.setString(4,  yearLevel);
-			insertIntoStudents.setString(5, imagePath);
-			insertIntoStudents.setString(6, parentName);
-			insertIntoStudents.setString(7, parentCellNum);
-			
-			result = insertIntoStudents.executeUpdate();
+		if(isNumber(yearLevel) == false)
+		{
+			JOptionPane.showMessageDialog(null, "Incorrect Year Level", "Incorrect Year Level", JOptionPane.WARNING_MESSAGE);
+		}else if(isNumber(yearLevel) == true){
+		try{	
+				insertIntoStudents.setString(1, rfidNumber);
+				insertIntoStudents.setString(2, studentFirstName);
+				insertIntoStudents.setString(3, studentLastName);
+				insertIntoStudents.setString(4,  yearLevel);
+				insertIntoStudents.setString(5, imagePath);
+				insertIntoStudents.setString(6, parentName);
+				insertIntoStudents.setString(7, parentCellNum);
+				result = insertIntoStudents.executeUpdate();
 		}catch(SQLException e){
 			e.printStackTrace();
 			close();
+			}
 		}
 		return result;
 	}
@@ -160,6 +143,23 @@ public class DataBaseDriverManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean isNumber(String value)
+	{
+		if(value.matches("[0-9]+"))
+		{
+			if(Integer.parseInt(value) > 4 || Integer.parseInt(value) < 1)
+			{
+				return false;
+			}else{
+			return true;
+			}
+		}else if(value.equals(""))
+		{
+			return false;
+		}
+		return false;
 	}
 
 }

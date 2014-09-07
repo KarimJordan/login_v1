@@ -74,7 +74,7 @@ public class Registry implements ActionListener{
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -85,14 +85,15 @@ public class Registry implements ActionListener{
 				}
 			}
 		});
-	}*/
+	}
 
 	/**
 	 * Create the application.
 	 * @throws IOException 
 	 */
 	public Registry() {
-		initialize();
+			initialize();
+		
 	}
 
 	/**
@@ -107,6 +108,15 @@ public class Registry implements ActionListener{
 		FileNameExtensionFilter ft = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg", "jfif", "jpe");
 		fcChoosePic.addChoosableFileFilter(ft);
 		
+		BufferedImage picture_default = null;
+		
+		/*try {
+			picture_default = ImageIO.read(new File("/image/blank.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BufferedImage default_img = (BufferedImage) picture_default.getScaledInstance(picture_panel.getWidth(),picture_panel.getHeight()-10, Image.SCALE_SMOOTH);*/
 		pic_label = new JLabel();
 		
 		//picture = new BufferedImage(0, 0, (Integer) null);
@@ -115,7 +125,7 @@ public class Registry implements ActionListener{
 		
 		frmRegistry.setResizable(false);
 		frmRegistry.setTitle("Registry");
-		frmRegistry.setBounds(100, 100, 460, 600);
+		frmRegistry.setBounds(100, 100, 500, 600);
 		frmRegistry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		btnSave = new JButton("Save");
@@ -167,25 +177,25 @@ public class Registry implements ActionListener{
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setFont(new Font("Times New Roman", Font.BOLD, 16));
-		txtFirstName.setText("sasas");
+		txtFirstName.setText("");
 		txtFirstName.setColumns(10);
 		
 		lblLastName = new JLabel("Last Name:");
 		lblLastName.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		txtLastName = new JTextField();
-		txtLastName.setText("sasas");
+		txtLastName.setText("");
 		txtLastName.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtLastName.setColumns(10);
 		
 		txtRFIDNum = new JTextField();
 		//txtRFIDNum.setEditable(false);
-		txtRFIDNum.setText("sasas");
+		txtRFIDNum.setText("");
 		txtRFIDNum.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtRFIDNum.setColumns(10);
 		
 		txtYearLevel = new JTextField();
-		txtYearLevel.setText("sasas");
+		txtYearLevel.setText("");
 		txtYearLevel.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtYearLevel.setColumns(10);
 		
@@ -196,12 +206,12 @@ public class Registry implements ActionListener{
 		lblYearLevel.setFont(new Font("Times New Roman", Font.BOLD, 17));
 		
 		txtParentName = new JTextField();
-		txtParentName.setText("sasas");
+		txtParentName.setText("");
 		txtParentName.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtParentName.setColumns(10);
 		
 		txtCellNum = new JTextField();
-		txtCellNum.setText("sasas");
+		txtCellNum.setText("");
 		txtCellNum.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtCellNum.setColumns(10);
 		
@@ -210,20 +220,7 @@ public class Registry implements ActionListener{
 		
 		lblParentCellNum = new JLabel("Parent Cell Num:");
 		lblParentCellNum.setFont(new Font("Times New Roman", Font.BOLD, 17));
-		
-		
-		/*BufferedImage picture;
-		pic_label = new JLabel();
-		
-		try {
-			picture = ImageIO.read(new File(txtFileLocation.getText()));
-			pic_label = new JLabel(new ImageIcon(picture));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
-		
-		
+
 		picture_panel = new JPanel();
 		picture_panel.add(pic_label);
 		picture_panel.setBorder(new LineBorder(Color.GRAY));
@@ -345,8 +342,7 @@ public class Registry implements ActionListener{
 				BufferedImage picture = null;
 				try {
 					picture = ImageIO.read(file);
-					Image dmg = picture.getScaledInstance(picture_panel.getWidth(), picture_panel.getHeight()-10,Image.SCALE_SMOOTH);
-					System.out.println(picture_panel.getHeight());
+					Image dmg = picture.getScaledInstance(253, 150,Image.SCALE_SMOOTH);
 					pic_label.setIcon(new ImageIcon(dmg));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -362,7 +358,6 @@ public class Registry implements ActionListener{
 	
 	
 	private void insertStudentActionPerformed(ActionEvent evt){
-		
 		int result = databaseManager.addStudent(txtRFIDNum.getText(), 
 				txtFirstName.getText(), 
 				txtLastName.getText(), 
@@ -370,19 +365,18 @@ public class Registry implements ActionListener{
 				txtFileLocation.getText(), 
 				txtParentName.getText(), 
 				txtCellNum.getText());
-		
-		/*System.out.println(txtRFIDNum.getText());
-		System.out.println(txtFirstName.getText());
-		System.out.println(txtLastName.getText());
-		System.out.println(txtYearLevel.getText());
-		System.out.println(txtFileLocation.getText());
-		System.out.println(txtParentName.getText());
-		System.out.println(txtCellNum.getText());*/
-		
-		
 		if(result == 1)
 		{
-			JOptionPane.showMessageDialog(null, "Student Added", "Student Successfully Added!", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Student Successfully Added!", "Student Added", JOptionPane.INFORMATION_MESSAGE);
+			txtRFIDNum.setText("");
+			txtFirstName.setText("");
+			txtLastName.setText("");
+			txtYearLevel.setText("");
+			txtFileLocation.setText("");
+			txtParentName.setText("");
+			txtCellNum.setText("");
+			pic_label.setIcon(null);
+			frmRegistry.setVisible(false);
 		}else{
 			JOptionPane.showMessageDialog(null, "Student Not Added", "Unsuccessful!", JOptionPane.ERROR_MESSAGE);
 		}

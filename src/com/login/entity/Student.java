@@ -9,16 +9,23 @@ public class Student {
 	private String imagePath;
 	private String parentName;
 	private String parentCellNumber;
+	private int attendance;
 	
 	public Student()
 	{}
 	
-	public Student(String studentFirstName, String studentLastName, String yearLevel, String imagePath)
+	public Student(String studentFirstName, String studentLastName, String yearLevel, String imagePath,
+			String parentName,
+			String parentCellNumber,
+			int attendance)
 	{
 		setStudentFirstName(studentFirstName);
-		//setStudentLastName(studentLastName);
+		setStudentLastName(studentLastName);
 		setYearLevel(yearLevel);
-		//setImagePath(imagePath);
+		setImagePath(imagePath);
+		setParentName(parentName);
+		setParentCellNumber(parentCellNumber);
+		setAttendance(attendance);
 	}
 	
 	public String getRFIDNumber() {
@@ -63,5 +70,10 @@ public class Student {
 	public void setParentCellNumber(String parentCellNumber) {
 		this.parentCellNumber = parentCellNumber;
 	}
-	
+	public int getAttendance() {
+		return attendance;
+	}
+	public void setAttendance(int attendance) {
+		this.attendance = attendance;
+	}
 }
