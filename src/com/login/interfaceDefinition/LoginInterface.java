@@ -39,15 +39,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.login.databaseConnection.DataBaseDriverManager;
 import com.login.entity.Serial;
 import com.login.entity.Student;
-import com.login.serialhandler.SerialClass;
-import com.login.serialhandler.SerialHandler;
 
 public class LoginInterface implements ActionListener, SerialPortEventListener{
 	
@@ -240,12 +237,54 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 						// TODO Auto-generated method stub
 						displayStudentInfo();
 						//addAttendance();
+						if(attendance > 5){
+							updateAttendance();
+						}
 						if(getCurrentDay().equals("Monday"))
 						{
-							System.out.println(day);
-							updateAttendance();
+							if(attendance == 5){
+								sendToArduino("0");
+								updateAttendance();
+							}else if(attendance != 5){
+								sendToArduino("2");
+								updateAttendance();
+							}
+						}else if(getCurrentDay().equals("Tuesday")){
+							if(attendance == 1){
+								sendToArduino("0");
+								modifyAttendance(true);
+							}else if(attendance != 5){
+								sendToArduino("1");
+								modifyAttendance(true);
+							}
+						}else if(getCurrentDay().equals("Wednesday")){
+							if(attendance == 2){
+								sendToArduino("0");
+								modifyAttendance(true);
+							}else if(attendance != 2){
+								sendToArduino("1");
+								modifyAttendance(true);
+							}
+						}else if(getCurrentDay().equals("Thursday")){
+							if(attendance == 3){
+								sendToArduino("0");
+								modifyAttendance(true);
+							}else if(attendance != 3){
+								sendToArduino("1");
+								modifyAttendance(true);
+							}
+						}else if(getCurrentDay().equals("Friday")){
+							if(attendance == 4){
+								sendToArduino("0");
+								modifyAttendance(true);
+							}else if(attendance != 4){
+								sendToArduino("1");
+								modifyAttendance(true);
+							}
+						}else if(getCurrentDay().equals("Saturday") || getCurrentDay().equals("Sunday")){
+							modifyAttendance(false);
 						}else{
-							addAttendance();
+							modifyAttendance(true);
 						}
 						delay();
 					}
@@ -481,9 +520,10 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}
 	}
 	
-	private void sendToArduino()
+	private void sendToArduino(String attendanceFlag)
 	{
-		String overallStream = parentCell + "," + attendance;
+		
+		String overallStream = parentCell + "," + attendanceFlag;
 		try {
 			serialOut.write(overallStream.getBytes());
 		} catch (IOException e) {
@@ -516,8 +556,15 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}
 	}
 	
-	private void addAttendance(){
-		databaseDriverManager.addAttendance(attendance + 1, txtRFIDNumberField.getText());
+	private void modifyAttendance(boolean mod){
+		if(mod == false)
+		{
+			databaseDriverManager.addAttendance(attendance - 1, txtRFIDNumberField.getText());
+		}else if(mod == true)
+		{
+			databaseDriverManager.addAttendance(attendance + 1, txtRFIDNumberField.getText());
+		}
+		
 	}
 	
 	private void updateAttendance()
@@ -621,7 +668,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			sendToArduino();
+			//sendToArduino();
 			//close();
 		}catch(InterruptedException e){
 			e.printStackTrace();
