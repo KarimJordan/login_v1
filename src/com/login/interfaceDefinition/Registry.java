@@ -46,16 +46,18 @@ public class Registry implements ActionListener{
 	private BufferedImage resize;
 	private List<Student> results;
 	public int item;
+	public int temp_edit;
 	
 	public JFrame frmRegistry;
 	
-	private JTextField txtFirstName;
-	private JTextField txtLastName;
+	public JTextField txtFirstName;
+	public JTextField txtLastName;
 	public JTextField txtRFIDNum;
-	private JTextField txtYearLevel;
-	private JTextField txtParentName;
-	private JTextField txtCellNum;
-	private JTextField txtFileLocation;
+	public JTextField txtYearLevel;
+	public JTextField txtParentName;
+	public JTextField txtCellNum;
+	public JTextField txtFileLocation;
+	public JTextField txtCourseName;
 	
 	private JFileChooser fcChoosePic;
 	
@@ -73,6 +75,8 @@ public class Registry implements ActionListener{
 	private JLabel lblParentName;
 	private JLabel lblParentCellNum;
 	public JLabel pic_label;
+	private JLabel lblCourseName;
+	
 	
 	/**
 	 * Launch the application.
@@ -129,7 +133,7 @@ public class Registry implements ActionListener{
 		
 		frmRegistry.setResizable(false);
 		frmRegistry.setTitle("Registry");
-		frmRegistry.setBounds(100, 100, 500, 600);
+		frmRegistry.setBounds(100, 100, 500, 647);
 		//frmRegistry.getContentPane().setBackground(Color.GREEN.darker().darker());
 		frmRegistry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -265,48 +269,60 @@ public class Registry implements ActionListener{
 			}
 		});*/
 		btnFileMenu.setFont(new Font("Verdana", Font.BOLD, 14));
+		
+		lblCourseName = new JLabel("Course Name:");
+		lblCourseName.setForeground(Color.BLACK.darker());
+		lblCourseName.setFont(new Font("Times New Roman", Font.BOLD, 17));
+		
+		txtCourseName = new JTextField();
+		txtCourseName.setText("");
+		txtCourseName.setFont(new Font("Times New Roman", Font.BOLD, 16));
+		txtCourseName.setColumns(10);
 		GroupLayout gl_information_panel = new GroupLayout(information_panel);
 		gl_information_panel.setHorizontalGroup(
 			gl_information_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_information_panel.createSequentialGroup()
+					.addContainerGap()
 					.addGroup(gl_information_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_information_panel.createSequentialGroup()
-							.addContainerGap()
-							.addGroup(gl_information_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblFirstName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblRfidNum, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtRFIDNum, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblYearLevel, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtYearLevel, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblParentName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtParentName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_information_panel.createSequentialGroup()
-									.addComponent(lblParentCellNum, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-									.addGap(18)
-									.addComponent(txtCellNum, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))))
+							.addComponent(lblFirstName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtFirstName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_information_panel.createSequentialGroup()
-							.addGap(92)
-							.addComponent(picture_panel, GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-							.addGap(89))
+							.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtLastName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_information_panel.createSequentialGroup()
-							.addContainerGap()
+							.addComponent(lblRfidNum, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtRFIDNum, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_information_panel.createSequentialGroup()
+							.addComponent(lblYearLevel, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtYearLevel, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_information_panel.createSequentialGroup()
+							.addComponent(lblParentName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtParentName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_information_panel.createSequentialGroup()
+							.addComponent(lblParentCellNum, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(txtCellNum, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_information_panel.createSequentialGroup()
 							.addComponent(btnFileMenu, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
 							.addComponent(txtFileLocation, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)))
 					.addGap(24))
+				.addGroup(gl_information_panel.createSequentialGroup()
+					.addGap(92)
+					.addComponent(picture_panel, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+					.addGap(113))
+				.addGroup(gl_information_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblCourseName, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(txtCourseName, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(64, Short.MAX_VALUE))
 		);
 		gl_information_panel.setVerticalGroup(
 			gl_information_panel.createParallelGroup(Alignment.LEADING)
@@ -335,9 +351,13 @@ public class Registry implements ActionListener{
 					.addGroup(gl_information_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblParentCellNum, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txtCellNum, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_information_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(txtCourseName, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblCourseName, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
 					.addComponent(picture_panel, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+					.addGap(27)
 					.addGroup(gl_information_panel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnFileMenu, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
 						.addComponent(txtFileLocation, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
@@ -354,6 +374,7 @@ public class Registry implements ActionListener{
 		Object source = e.getSource();
 		if(source.equals(btnCancel)){
 			frmRegistry.setVisible(false);
+			System.out.println(temp_edit);
 		}else if(source.equals(btnFileMenu)){
 			item = fcChoosePic.showOpenDialog(frmRegistry);
 			studentProfile.setImagePath(String.valueOf(fcChoosePic.getSelectedFile()));
@@ -381,14 +402,31 @@ public class Registry implements ActionListener{
 	}
 	
 	
+	
+	
 	private void insertStudentActionPerformed(ActionEvent evt){
-		int result = databaseManager.addStudent(txtRFIDNum.getText(), 
-				txtFirstName.getText(), 
-				txtLastName.getText(), 
-				txtYearLevel.getText(), 
-				txtFileLocation.getText(), 
-				txtParentName.getText(), 
-				txtCellNum.getText());
+		int result = 0;
+		if(temp_edit == 0)
+		{
+			result = databaseManager.addStudent(txtRFIDNum.getText(), 
+					txtFirstName.getText(), 
+					txtLastName.getText(), 
+					txtYearLevel.getText(), 
+					txtFileLocation.getText(), 
+					txtParentName.getText(), 
+					txtCellNum.getText(),
+					txtCourseName.getText());
+		}else if(temp_edit == 1){
+			result = databaseManager.editStudent(txtRFIDNum.getText(), 
+					txtFirstName.getText(), 
+					txtLastName.getText(), 
+					txtYearLevel.getText(), 
+					txtFileLocation.getText(), 
+					txtParentName.getText(), 
+					txtCellNum.getText(),
+					txtCourseName.getText());
+		}
+		
 		if(result == 1)
 		{
 			JOptionPane.showMessageDialog(null, "Student Successfully Added!", "Student Added", JOptionPane.INFORMATION_MESSAGE);
@@ -405,6 +443,4 @@ public class Registry implements ActionListener{
 			JOptionPane.showMessageDialog(null, "Student Not Added", "Unsuccessful!", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	
 }

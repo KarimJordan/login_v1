@@ -9,14 +9,19 @@ public class Student {
 	private String imagePath;
 	private String parentName;
 	private String parentCellNumber;
+	private String courseName;
 	private int attendance;
 	
 	public Student()
 	{}
 	
-	public Student(String studentFirstName, String studentLastName, String yearLevel, String imagePath,
+	public Student(String studentFirstName, 
+			String studentLastName, 
+			String yearLevel, 
+			String imagePath,
 			String parentName,
 			String parentCellNumber,
+			String courseName,
 			int attendance)
 	{
 		setStudentFirstName(studentFirstName);
@@ -25,6 +30,7 @@ public class Student {
 		setImagePath(imagePath);
 		setParentName(parentName);
 		setParentCellNumber(parentCellNumber);
+		setCourseName(courseName);
 		setAttendance(attendance);
 	}
 	
@@ -76,4 +82,13 @@ public class Student {
 	public void setAttendance(int attendance) {
 		this.attendance = attendance;
 	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	
 }

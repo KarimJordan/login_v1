@@ -19,7 +19,7 @@ public class DataBaseDriverManager {
 	private ResultSet resultSet = null;
 	private Statement statement = null;
 	private String connectionOracleDriver = "oracle.jdbc.driver.OracleDriver";
-	private String connectionURLOracle = "jdbc:oracle:thin:@localhost:1523:TEST";
+	private String connectionURLOracle = "jdbc:oracle:thin:@localhost:1521:LISTENER3";
 	private String connectionUserNameOracle = "sys as sysdba";
 	private String connectionUserPasswordOracle = "Apple123";
 	
@@ -32,12 +32,17 @@ public class DataBaseDriverManager {
 	private PreparedStatement insertIntoStudents = null;
 	private PreparedStatement insertAttendance = null;
 	private PreparedStatement queryAttendance = null;
+	private PreparedStatement editStudent = null;
+	private PreparedStatement deleteStudent = null;
 	private String selectFromStudentsQuery = "SELECT * FROM STUDENTS " +
 			"WHERE RFID_Number = ?";
 	private String insertInfoStudentsQuery = "INSERT INTO STUDENTS (RFID_Number, STUDENT_FIRST_NAME, " +
-			"STUDENT_LAST_NAME, YEAR_LEVEL, IMAGE_PATH, PARENT_NAME, PARENT_CELL_NUM) VALUES (?,?,?,?,?,?,?)";
-	private String insertAttendanceQuery = "INSERT INTO STUDENTS (ATTENDANCE) VALUES (?) WHERE RFID_Number = ?";
-	private String queryAttendanceQuery = "SELECT ATTENDANCE FROM STUDENTS WHERE RFID_Number = ?";
+			"STUDENT_LAST_NAME, YEAR_LEVEL, IMAGE_PATH, PARENT_NAME, PARENT_CELL_NUM, COURSE) VALUES (?,?,?,?,?,?,?,?)";
+	private String editStudentQuery =  "UPDATE STUDENTS SET STUDENT_FIRST_NAME = ?, STUDENT_LAST_NAME = ?, YEAR_LEVEL = ?,"
+			+ "IMAGE_PATH = ?, PARENT_NAME = ?, PARENT_CELL_NUM = ?, COURSE = ? WHERE RFID_Number = ?";
+	private String deleteStudentQuery = "DELETE FROM STUDENTS WHERE RFID_Number = ?";
+	private String insertAttendanceQuery = "UPDATE STUDENTS SET ATTENDANCE = ? WHERE RFID_Number = ?";
+	private String updateAttendanceQuery = "UPDATE STUDENTS SET ATTENDANCE = 1 WHERE RFID_Number = ?";
 	
 	//query sample
 	private String queryStudent = "SELECT * FROM SCH_DELIVERY_INFO_EVENT";
@@ -50,7 +55,9 @@ public class DataBaseDriverManager {
 			selectFromStudents = connection.prepareStatement(selectFromStudentsQuery);
 			insertIntoStudents = connection.prepareStatement(insertInfoStudentsQuery);
 			insertAttendance = connection.prepareStatement(insertAttendanceQuery);
-			queryAttendance = connection.prepareStatement(queryAttendanceQuery);
+			queryAttendance = connection.prepareStatement(updateAttendanceQuery);
+			editStudent = connection.prepareStatement(editStudentQuery);
+			deleteStudent = connection.prepareStatement(deleteStudentQuery);
 		
 			if(connection != null){
 				System.out.println("Successful Connection");
@@ -83,6 +90,7 @@ public class DataBaseDriverManager {
 						resultSet.getString("IMAGE_PATH"),
 						resultSet.getString("PARENT_NAME"),
 						resultSet.getString("PARENT_CELL_NUM"),
+						resultSet.getString("COURSE"),
 						resultSet.getInt("ATTENDANCE")
 						));
 			}
@@ -100,12 +108,15 @@ public class DataBaseDriverManager {
 			String yearLevel, 
 			String imagePath,
 			String parentName,
-			String parentCellNum)
+			String parentCellNum,
+			String courseName)
 	{
 		int result = 0;
 		if(isNumber(yearLevel) == false)
 		{
 			JOptionPane.showMessageDialog(null, "Incorrect Year Level", "Incorrect Year Level", JOptionPane.WARNING_MESSAGE);
+		}else if(studentFirstName.isEmpty() || studentLastName.isEmpty() || yearLevel.isEmpty() || imagePath.isEmpty() || parentName.isEmpty() || parentCellNum.isEmpty()){
+			JOptionPane.showMessageDialog(null, "Please Fill Out All TextFields", "Incorrect Input", JOptionPane.WARNING_MESSAGE);
 		}else if(isNumber(yearLevel) == true){
 		try{	
 				insertIntoStudents.setString(1, rfidNumber);
@@ -115,6 +126,7 @@ public class DataBaseDriverManager {
 				insertIntoStudents.setString(5, imagePath);
 				insertIntoStudents.setString(6, parentName);
 				insertIntoStudents.setString(7, parentCellNum);
+				insertIntoStudents.setString(8, courseName);
 				result = insertIntoStudents.executeUpdate();
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -124,13 +136,78 @@ public class DataBaseDriverManager {
 		return result;
 	}
 	
-	public int addAttendance(int attendance)
+	public int editStudent(String rfidNumber, 
+			String studentFirstName, 
+			String studentLastName,
+			String yearLevel, 
+			String imagePath,
+			String parentName,
+			String parentCellNum,
+			String courseName)
+	{
+		int result = 0;
+		if(isNumber(yearLevel) == false)
+		{
+			JOptionPane.showMessageDialog(null, "Incorrect Year Level", "Incorrect Year Level", JOptionPane.WARNING_MESSAGE);
+		}else if(studentFirstName.isEmpty() || studentLastName.isEmpty() || yearLevel.isEmpty() || imagePath.isEmpty() || parentName.isEmpty() || parentCellNum.isEmpty()){
+			JOptionPane.showMessageDialog(null, "Please Fill Out All TextFields", "Incorrect Input", JOptionPane.WARNING_MESSAGE);
+		}else if(isNumber(yearLevel) == true){
+		try{	
+				editStudent.setString(1, studentFirstName);
+				editStudent.setString(2, studentLastName);
+				editStudent.setString(3,  yearLevel);
+				editStudent.setString(4, imagePath);
+				editStudent.setString(5, parentName);
+				editStudent.setString(6, parentCellNum);
+				editStudent.setString(7, courseName);
+				editStudent.setString(8, rfidNumber);
+				result = editStudent.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+			close();
+			}
+		}
+		return result;
+	}
+	
+	public int deleteStudent(String rfidNumber)
+	{
+		int result = 0;
+		try {
+			deleteStudent.setString(1, rfidNumber);
+			result = deleteStudent.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			close();
+		}
+		return result;
+	}
+	
+	public int addAttendance(int attendance, String rfidNumber)
 	{
 		int result = 0;
 		try{
 			insertAttendance.setInt(1, attendance);
+			insertAttendance.setString(2, rfidNumber);
+			result = insertAttendance.executeUpdate();
 		}catch(SQLException e){
 			e.printStackTrace();
+			close();
+		}
+		return result;
+	}
+	
+	public int updateAttendance(String rfidNumber)
+	{
+		int result = 0;
+		try {
+			queryAttendance.setString(1, rfidNumber);
+			result = queryAttendance.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			close();
 		}
 		return result;
 	}
