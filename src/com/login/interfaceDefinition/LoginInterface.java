@@ -238,53 +238,53 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 						displayStudentInfo();
 						//addAttendance();
 						if(attendance > 5){
-							updateAttendance();
+							modifyAttendance(true, 1);
 						}
 						if(getCurrentDay().equals("Monday"))
 						{
 							if(attendance == 5){
 								sendToArduino("0");
-								updateAttendance();
+								modifyAttendance(true, 1);
 							}else if(attendance != 5){
 								sendToArduino("2");
-								updateAttendance();
+								modifyAttendance(true, 1);
 							}
 						}else if(getCurrentDay().equals("Tuesday")){
 							if(attendance == 1){
 								sendToArduino("0");
-								modifyAttendance(true);
+								modifyAttendance(true, 2);
 							}else if(attendance != 5){
 								sendToArduino("1");
-								modifyAttendance(true);
+								modifyAttendance(true, 2);
 							}
 						}else if(getCurrentDay().equals("Wednesday")){
 							if(attendance == 2){
 								sendToArduino("0");
-								modifyAttendance(true);
+								modifyAttendance(true, 3);
 							}else if(attendance != 2){
 								sendToArduino("1");
-								modifyAttendance(true);
+								modifyAttendance(true, 3);
 							}
 						}else if(getCurrentDay().equals("Thursday")){
 							if(attendance == 3){
 								sendToArduino("0");
-								modifyAttendance(true);
+								modifyAttendance(true, 4);
 							}else if(attendance != 3){
 								sendToArduino("1");
-								modifyAttendance(true);
+								modifyAttendance(true, 4);
 							}
 						}else if(getCurrentDay().equals("Friday")){
 							if(attendance == 4){
 								sendToArduino("0");
-								modifyAttendance(true);
+								modifyAttendance(true, 5);
 							}else if(attendance != 4){
 								sendToArduino("1");
-								modifyAttendance(true);
+								modifyAttendance(true, 5);
 							}
 						}else if(getCurrentDay().equals("Saturday") || getCurrentDay().equals("Sunday")){
-							modifyAttendance(false);
+							modifyAttendance(false, attendance);
 						}else{
-							modifyAttendance(true);
+							modifyAttendance(true, attendance);
 						}
 						delay();
 					}
@@ -556,22 +556,17 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}
 	}
 	
-	private void modifyAttendance(boolean mod){
+	private void modifyAttendance(boolean mod, int numberOfDays){
 		if(mod == false)
 		{
 			databaseDriverManager.addAttendance(attendance - 1, txtRFIDNumberField.getText());
 		}else if(mod == true)
 		{
-			databaseDriverManager.addAttendance(attendance + 1, txtRFIDNumberField.getText());
+			databaseDriverManager.addAttendance(numberOfDays, txtRFIDNumberField.getText());
 		}
 		
 	}
-	
-	private void updateAttendance()
-	{
-		databaseDriverManager.updateAttendance(txtRFIDNumberField.getText());
-	}
-	
+		
 	private String getCurrentDay()
 	{
 		Date date = new Date();

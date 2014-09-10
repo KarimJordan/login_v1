@@ -31,7 +31,6 @@ public class DataBaseDriverManager {
 	private PreparedStatement selectFromStudents = null;
 	private PreparedStatement insertIntoStudents = null;
 	private PreparedStatement insertAttendance = null;
-	private PreparedStatement queryAttendance = null;
 	private PreparedStatement editStudent = null;
 	private PreparedStatement deleteStudent = null;
 	private String selectFromStudentsQuery = "SELECT * FROM STUDENTS " +
@@ -42,10 +41,8 @@ public class DataBaseDriverManager {
 			+ "IMAGE_PATH = ?, PARENT_NAME = ?, PARENT_CELL_NUM = ?, COURSE = ? WHERE RFID_Number = ?";
 	private String deleteStudentQuery = "DELETE FROM STUDENTS WHERE RFID_Number = ?";
 	private String insertAttendanceQuery = "UPDATE STUDENTS SET ATTENDANCE = ? WHERE RFID_Number = ?";
-	private String updateAttendanceQuery = "UPDATE STUDENTS SET ATTENDANCE = 1 WHERE RFID_Number = ?";
 	
 	//query sample
-	private String queryStudent = "SELECT * FROM SCH_DELIVERY_INFO_EVENT";
 	
 	public DataBaseDriverManager()
 	{
@@ -55,7 +52,6 @@ public class DataBaseDriverManager {
 			selectFromStudents = connection.prepareStatement(selectFromStudentsQuery);
 			insertIntoStudents = connection.prepareStatement(insertInfoStudentsQuery);
 			insertAttendance = connection.prepareStatement(insertAttendanceQuery);
-			queryAttendance = connection.prepareStatement(updateAttendanceQuery);
 			editStudent = connection.prepareStatement(editStudentQuery);
 			deleteStudent = connection.prepareStatement(deleteStudentQuery);
 		
@@ -192,20 +188,6 @@ public class DataBaseDriverManager {
 			insertAttendance.setString(2, rfidNumber);
 			result = insertAttendance.executeUpdate();
 		}catch(SQLException e){
-			e.printStackTrace();
-			close();
-		}
-		return result;
-	}
-	
-	public int updateAttendance(String rfidNumber)
-	{
-		int result = 0;
-		try {
-			queryAttendance.setString(1, rfidNumber);
-			result = queryAttendance.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			close();
 		}
