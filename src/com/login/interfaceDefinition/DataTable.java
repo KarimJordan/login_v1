@@ -29,7 +29,6 @@ import com.login.databaseConnection.DataBaseDriverManager;
 import com.login.entity.StudentLog;
 
 public class DataTable implements ActionListener{
-
 	private JFrame frmDataTable;
 	private JTextField nameField;
 	private JTextField courseField;
@@ -66,6 +65,8 @@ public class DataTable implements ActionListener{
 	private String sLogIn;
 	private String sLogOut;
 	private String filterType = "Show All";
+	private JLabel lblLastName;
+	private JTextField lastNameField;
 	
 	/**
 	 * Launch the application.
@@ -99,7 +100,7 @@ public class DataTable implements ActionListener{
 		
 		frmDataTable = new JFrame();
 		frmDataTable.setTitle("Report Table");
-		frmDataTable.setBounds(100, 100, 800, 480);
+		frmDataTable.setBounds(100, 100, 800, 460);
 		frmDataTable.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDataTable.getContentPane().setLayout(new BoxLayout(frmDataTable.getContentPane(), BoxLayout.X_AXIS));
 		
@@ -127,7 +128,7 @@ public class DataTable implements ActionListener{
 			}
 		});
 		
-		lblName = new JLabel("Name:");
+		lblName = new JLabel("First Name:");
 		
 		nameField = new JTextField();
 		nameField.setColumns(10);
@@ -152,31 +153,46 @@ public class DataTable implements ActionListener{
 		
 		spanCombo = new JComboBox();
 		spanCombo.setModel(new DefaultComboBoxModel(new String[] {"One Hour", "One Day", "One Week"}));
+		
+		lblLastName = new JLabel("Last Name :");
+		
+		lastNameField = new JTextField();
+		lastNameField.setColumns(10);
 		GroupLayout gl_filterPanel = new GroupLayout(filterPanel);
 		gl_filterPanel.setHorizontalGroup(
 			gl_filterPanel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_filterPanel.createSequentialGroup()
 					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_filterPanel.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblCourse, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.TRAILING, gl_filterPanel.createSequentialGroup()
 							.addGap(10)
 							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_filterPanel.createSequentialGroup()
-									.addGroup(gl_filterPanel.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblCourse, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
-										.addComponent(nameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-										.addComponent(courseField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-										.addComponent(spanCombo, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_filterPanel.createSequentialGroup()
 									.addComponent(rdbtnName)
-									.addGap(18)
-									.addComponent(rdbtnDate, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))))
+									.addGap(3))
+								.addComponent(lblName, GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE))))
+					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_filterPanel.createSequentialGroup()
-							.addGap(87)
-							.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(21, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(spanCombo, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE))
+							.addGap(15))
+						.addGroup(Alignment.TRAILING, gl_filterPanel.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_filterPanel.createSequentialGroup()
+								.addGap(15)
+								.addComponent(rdbtnDate, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
+							.addGroup(gl_filterPanel.createSequentialGroup()
+								.addGap(18)
+								.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+									.addComponent(lastNameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+									.addComponent(nameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+									.addComponent(courseField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)))))
+					.addGap(58))
 		);
 		gl_filterPanel.setVerticalGroup(
 			gl_filterPanel.createParallelGroup(Alignment.LEADING)
@@ -185,11 +201,15 @@ public class DataTable implements ActionListener{
 					.addGroup(gl_filterPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(rdbtnName)
 						.addComponent(rdbtnDate))
-					.addGap(26)
+					.addGap(29)
 					.addGroup(gl_filterPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblName)
 						.addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(14)
+					.addGap(18)
+					.addGroup(gl_filterPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblLastName)
+						.addComponent(lastNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_filterPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblCourse)
 						.addComponent(courseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -197,7 +217,7 @@ public class DataTable implements ActionListener{
 					.addComponent(spanCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(70, Short.MAX_VALUE))
+					.addContainerGap(430, Short.MAX_VALUE))
 		);
 		filterPanel.setLayout(gl_filterPanel);
 		
@@ -219,12 +239,15 @@ public class DataTable implements ActionListener{
 		if(choice.equals("Span")){
 			nameField.setEnabled(false);
 			nameField.setText("");
+			lastNameField.setEnabled(false);
+			lastNameField.setText("");
 			courseField.setEnabled(false);
 			courseField.setText("");
 			spanCombo.setEnabled(true);
 			filterType = "Show Span";
 		}else if (choice.equals("Name")){
 			nameField.setEnabled(true);
+			lastNameField.setEnabled(true);
 			courseField.setEnabled(true);
 			spanCombo.setEnabled(false);
 			filterType = "Show Name";
@@ -250,7 +273,7 @@ public class DataTable implements ActionListener{
 			}
 		}else if(filterType.equals("Show Name")){
 			System.out.println("sjhag");
-			results = databaseDriverManager.getStudentLogOnInput(nameField.getText(), nameField.getText(), courseField.getText());
+			results = databaseDriverManager.getStudentLogOnInput(nameField.getText(), lastNameField.getText(), courseField.getText());
 			model.setRowCount(0);
 			for(StudentLog list:results){
 				sFirstName = list.getFirstName();
@@ -262,10 +285,8 @@ public class DataTable implements ActionListener{
 				model.addRow(new Object[]{sFirstName, sLastName, sStudentNumber, sCourse, sLogIn, sLogOut});
 			}
 		}else if(filterType.equals("Show Span")){
+			model.setRowCount(0);
 			System.out.println("sjahska");
 		}
-		
 	}
-	
-	
 }
