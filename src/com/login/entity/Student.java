@@ -11,6 +11,7 @@ public class Student {
 	private String parentCellNumber;
 	private String courseName;
 	private int attendance;
+	private String log;
 	
 	public Student()
 	{}
@@ -22,7 +23,8 @@ public class Student {
 			String parentName,
 			String parentCellNumber,
 			String courseName,
-			int attendance)
+			int attendance,
+			String log)
 	{
 		setStudentFirstName(studentFirstName);
 		setStudentLastName(studentLastName);
@@ -32,6 +34,7 @@ public class Student {
 		setParentCellNumber(parentCellNumber);
 		setCourseName(courseName);
 		setAttendance(attendance);
+		setLog(log);
 	}
 	
 	public String getRFIDNumber() {
@@ -89,6 +92,14 @@ public class Student {
 
 	public void setCourseName(String courseName) {
 		this.courseName = courseName;
+	}
+
+	public String getLog() {
+		return log;
+	}
+
+	public void setLog(String log) {
+		this.log = log;
 	}
 	
 }

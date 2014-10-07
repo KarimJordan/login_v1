@@ -43,12 +43,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.login.databaseConnection.DataBaseDriverManager;
-import com.login.entity.Serial;
 import com.login.entity.Student;
+import com.login.entity.StudentLog;
 
 public class LoginInterface implements ActionListener, SerialPortEventListener{
 	
-	//serialCod
+	//RFID Handler Variables
 	/** Milliseconds to block while waiting for port open */
 	public static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
@@ -61,7 +61,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 																				// OS
 																				// X
 			"/dev/ttyUSB0", // Linux
-			"COM18", // Windows
+			"COM4", // Windows
 	};
 	private PrintStream printStream;
 	
@@ -69,6 +69,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	private InputStream serialIn;
 	private OutputStream serialOut;
 	private BufferedReader serialReader;
+	private static StudentLog logStudent;
 	
 	private JFrame frmLoginSystem;
 	
@@ -99,7 +100,6 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	private static Registry registry;
 	//private static SerialHandler serial;
 	//private static SerialClass serialClass;
-	private static Serial serialInput = new Serial();
 	public JTextField txtRFIDNumberField;
 	private String firstName;
 	private String lastName;
@@ -110,6 +110,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	private String fileLocation;
 	private String day;
 	private int attendance;
+	private String log;
 	private JMenuItem mntmEdit;
 	private JMenuItem mntmDelete;
 	private JLabel lblCourseName;
@@ -124,11 +125,12 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			public void run() {
 				try {
 					LoginInterface window = new LoginInterface();
+					logStudent = new StudentLog();
 					registry = new Registry();
 					//serial = new SerialHandler();
 					window.frmLoginSystem.setVisible(true);
 					window.frmLoginSystem.setBackground(Color.GREEN);
-					window.begin();
+					//window.begin();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -174,7 +176,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		//logo_panel.setBorder(new LineBorder(new Color(0, 0, 0), 3, true));
 		//System.out.println(logo_panel.getHeight() + " " + logo_panel.getWidth());
 		lblLogoLabel = new JLabel();
-		//File file = new File("C:\\Users\\Karim\\Desktop\\docs\\thesis\\Parking_System\\login_v1\\newlogo.png");
+		//File file = new File("C:\\Users\\Jean\\Desktop\\docs\\thesis\\Parking_System\\login_v1\\newlogo.png");
 		File file = new File(".\\image\\newlogo.png");
 		BufferedImage logoPic = null;
 		try {
@@ -216,7 +218,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		
 		txtRFIDNumberField = new JTextField();
 		txtRFIDNumberField.setColumns(10);
-		txtRFIDNumberField.setVisible(false);
+		//txtRFIDNumberField.setVisible(false);
 		//txtRFIDNumberField.setEnabled(false);
 		txtRFIDNumberField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -237,54 +239,91 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 						// TODO Auto-generated method stub
 						displayStudentInfo();
 						//addAttendance();
-						if(attendance > 5){
+						//System.out.println(attendance + " " + getCurrentDay());
+						/*if(attendance > 5){
 							modifyAttendance(true, 1);
-						}
+						}*/
+						String time = DateFormat.getTimeInstance().format(new Date());
+						String date = DateFormat.getDateInstance().format(new Date());
+						String overAllDate = date + " " + time;
 						if(getCurrentDay().equals("Monday"))
 						{
 							if(attendance == 5){
-								sendToArduino("0");
+								System.out.println(log);
+								sendToArduino("0", log);
 								modifyAttendance(true, 1);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}else if(attendance != 5){
-								sendToArduino("2");
+								sendToArduino("2", log);
 								modifyAttendance(true, 1);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
+								//System.out.println(log);
 							}
 						}else if(getCurrentDay().equals("Tuesday")){
 							if(attendance == 1){
-								sendToArduino("0");
+								sendToArduino("0", log);
 								modifyAttendance(true, 2);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}else if(attendance != 5){
-								sendToArduino("1");
+								sendToArduino("1", log);
 								modifyAttendance(true, 2);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}
 						}else if(getCurrentDay().equals("Wednesday")){
 							if(attendance == 2){
-								sendToArduino("0");
+								sendToArduino("0", log);
 								modifyAttendance(true, 3);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}else if(attendance != 2){
-								sendToArduino("1");
+								sendToArduino("1", log);
 								modifyAttendance(true, 3);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}
 						}else if(getCurrentDay().equals("Thursday")){
 							if(attendance == 3){
-								sendToArduino("0");
+								sendToArduino("0", log);
 								modifyAttendance(true, 4);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}else if(attendance != 3){
-								sendToArduino("1");
+								sendToArduino("1", log);
 								modifyAttendance(true, 4);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}
 						}else if(getCurrentDay().equals("Friday")){
 							if(attendance == 4){
-								sendToArduino("0");
+								sendToArduino("0", log);
 								modifyAttendance(true, 5);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}else if(attendance != 4){
-								sendToArduino("1");
+								sendToArduino("1", log);
 								modifyAttendance(true, 5);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
 							}
 						}else if(getCurrentDay().equals("Saturday") || getCurrentDay().equals("Sunday")){
-							modifyAttendance(false, attendance);
-						}else{
-							modifyAttendance(true, attendance);
+							System.out.println("sample");
+							if(attendance > 5 || attendance <= 0){
+								System.out.println("AT: " + attendance + " " + "Log: " + log);
+								//sendToArduino("0", log);
+								modifyAttendance(true, 5);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
+							}else{
+								System.out.println("AT: " + attendance + " " + "Log: " + log);
+								//sendToArduino("0", log);
+								modifyAttendance(true, 5);
+								modifyLog(log);
+								insertLog(Integer.parseInt(log),overAllDate);
+							}
 						}
 						delay();
 					}
@@ -472,13 +511,9 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}else if(source == mntmExit){
 			System.exit(0);
 		}else if(source == mntmAbout){
-			/*JOptionPane.showMessageDialog(null, 
-					"Developed For Wesleyan University Login System", 
-					"About Software", JOptionPane.INFORMATION_MESSAGE);*/
-			//DateFormat.getTimeInstance().format(new Date());
-			Date date = new Date();
-			DateFormat dateFormat = new SimpleDateFormat("EEEE");
-			System.out.println(dateFormat.format(date));
+			JOptionPane.showMessageDialog(null, 
+					"Developed For Wesleyan University Login System and is still under alpha phase.", 
+					"About Software", JOptionPane.INFORMATION_MESSAGE);
 		}else if(source == mntmEdit){
 			registry.frmRegistry.setVisible(true);
 			registry.txtFirstName.setText(firstName);
@@ -520,10 +555,20 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		}
 	}
 	
-	private void sendToArduino(String attendanceFlag)
+	private void insertLog(int logFlag, String date){
+		if(logFlag == 0){
+			//logStudent.setLog_in(date);
+			databaseDriverManager.addLog(firstName, lastName, txtRFIDNumberField.getText(), courseName, date);
+		}else if (logFlag == 1){
+			//System.out.println(logStudent.getLog_in());
+			databaseDriverManager.addLogOut(date, logStudent.getLog_in());
+		}
+	}
+	
+	private void sendToArduino(String attendanceFlag, String log)
 	{
 		
-		String overallStream = parentCell + "," + attendanceFlag;
+		String overallStream = parentCell + "," + attendanceFlag + "," + log;
 		try {
 			serialOut.write(overallStream.getBytes());
 		} catch (IOException e) {
@@ -565,6 +610,18 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			databaseDriverManager.addAttendance(numberOfDays, txtRFIDNumberField.getText());
 		}
 		
+	}
+	
+	private void modifyLog(String LogUpdate){
+		//System.out.println(LogUpdate);
+		if (Integer.parseInt(LogUpdate) == 1){
+			databaseDriverManager.updateLog("0", txtRFIDNumberField.getText());
+			//System.out.println("SJKHAK");
+		} else if(Integer.parseInt(LogUpdate) == 0 || LogUpdate == null || LogUpdate.isEmpty()){
+			databaseDriverManager.updateLog("1", txtRFIDNumberField.getText());
+			//System.out.println(txtRFIDNumberField.getText());
+			//System.out.println("SJKHAK");
+		}
 	}
 		
 	private String getCurrentDay()
@@ -621,7 +678,8 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 			fileLocation = student.getImagePath();
 			attendance = student.getAttendance();
 			courseName = student.getCourseName();
-			System.out.println(attendance);
+			log = student.getLog();
+			//System.out.println(log);
 			lblStudentName.setText(student.getStudentFirstName() + " " + student.getStudentLastName());
 			lblCourseName.setText(student.getCourseName());
 			switch (Integer.parseInt(student.getYearLevel())) {
@@ -649,7 +707,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		Thread.currentThread();
 		
 		try{
-			Thread.sleep(15000);
+			Thread.sleep(3000);
 			lblStudentName.setText("Student Name");
 			lblYear.setText("Year Level");
 			lblCourseName.setText("Course Name");
@@ -678,7 +736,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 	}
 	
 	public void begin() throws Exception{
-		CommPortIdentifier port  = CommPortIdentifier.getPortIdentifier("COM18");
+		CommPortIdentifier port  = CommPortIdentifier.getPortIdentifier("COM4");
 		CommPort commPOrt = port.open(this.getClass().getName(), 2000);
 		serialPort  = (SerialPort) commPOrt;
 		serialPort.setSerialPortParams(115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
@@ -694,7 +752,7 @@ public class LoginInterface implements ActionListener, SerialPortEventListener{
 		// TODO Auto-generated method stub
 		try{
 			String line = serialReader.readLine();
-			System.out.println(line);
+			//System.out.println(line);
 			registry.txtRFIDNum.setText(line);
 			txtRFIDNumberField.setText(line);
 			//if(line.en)

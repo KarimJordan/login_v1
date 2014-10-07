@@ -81,7 +81,7 @@ public class Registry implements ActionListener{
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -93,7 +93,7 @@ public class Registry implements ActionListener{
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the application.
@@ -226,7 +226,7 @@ public class Registry implements ActionListener{
 		txtParentName.setColumns(10);
 		
 		txtCellNum = new JTextField();
-		txtCellNum.setText("");
+		txtCellNum.setText("+639");
 		txtCellNum.setFont(new Font("Times New Roman", Font.BOLD, 16));
 		txtCellNum.setColumns(10);
 		
