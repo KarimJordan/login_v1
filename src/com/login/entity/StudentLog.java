@@ -1,5 +1,7 @@
 package com.login.entity;
 
+import java.util.Date;
+
 public class StudentLog {
 	
 	private String firstName;

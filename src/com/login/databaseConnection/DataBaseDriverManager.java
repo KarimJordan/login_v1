@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -50,6 +51,7 @@ public class DataBaseDriverManager {
 	private PreparedStatement viewLogOnLastName = null;
 	private PreparedStatement viewLogOnCourse = null;
 	private PreparedStatement viewLogOnInput = null;
+	private PreparedStatement viewDate = null;
 	private String selectFromStudentsQuery = "SELECT * FROM STUDENTS " +
 			"WHERE RFID_Number = ?";
 	private String insertInfoStudentsQuery = "INSERT INTO STUDENTS (RFID_Number, STUDENT_FIRST_NAME, " +
@@ -67,6 +69,7 @@ public class DataBaseDriverManager {
 	private String viewLogOnLastNameQuery = "SELECT * FROM STUDENT_LOG WHERE LASTNAME = ?";
 	private String viewLogOnCourseQuery = "SELECT * FROM STUDENT_LOG WHERE COURSE = ?";
 	private String viewLogOnInputQuery = "SELECT * FROM STUDENT_LOG WHERE FIRSTNAME = ? OR LASTNAME = ? OR COURSE = ?";
+	private String viewDateQuery = "SELECT * FROM STUDENT_LOG WHERE LOG_IN = ?";
 	
 	//query sample
 	private String viewAllQuery = "SELECT * FROM STUDENT_LOG";
@@ -116,6 +119,30 @@ public class DataBaseDriverManager {
 						resultSet.getString("LOG_IN"),
 						resultSet.getString("LOG_OUT")
 						));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+			close();
+		}
+		return results;
+	}
+	
+	public List<StudentLog> getStudentLogOnDate(String logIn){
+		List<StudentLog> results = null;
+		ResultSet resultSet = null;
+		try{
+			viewDate.setString(1, logIn);
+			resultSet = viewDate.executeQuery();
+			results = new ArrayList<StudentLog>();
+			while(resultSet.next()){
+				StudentLog logList = new StudentLog();
+				logList.setFirstName(resultSet.getString("FIRSTNAME"));
+				logList.setLastName(resultSet.getString("LASTNAME"));
+				logList.setStudentNumber(resultSet.getString("STUDENTNUMBER"));
+				logList.setCourse(resultSet.getString("COURSE"));
+				logList.setLog_in(resultSet.getString("LOG_IN"));
+				logList.setLog_out(resultSet.getString("LOG_OUT"));
+				results.add(logList);
 			}
 		}catch(SQLException e){
 			e.printStackTrace();

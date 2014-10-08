@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -37,6 +40,7 @@ public class DataTable implements ActionListener{
 	
 	private JLabel lblName;
 	private JLabel lblCourse;
+	private JLabel lblDate;
 	
 	private JPanel filterPanel;
 	private JPanel dataPanel;
@@ -44,8 +48,6 @@ public class DataTable implements ActionListener{
 	private ButtonGroup buttonGroup;
 	private JRadioButton rdbtnName;
 	private JRadioButton rdbtnDate;
-	
-	private JComboBox spanCombo;
 	
 	private final String[] columnNames = {"First Name", "Last Name","Student Number", "Course", "Log In", "Log Out"};
 	private DefaultTableModel model;
@@ -67,6 +69,7 @@ public class DataTable implements ActionListener{
 	private String filterType = "Show All";
 	private JLabel lblLastName;
 	private JTextField lastNameField;
+	private JTextField dateField;
 	
 	/**
 	 * Launch the application.
@@ -142,8 +145,8 @@ public class DataTable implements ActionListener{
 		rdbtnName.setActionCommand("Name");
 		rdbtnName.addActionListener(this);
 		
-		rdbtnDate = new JRadioButton("Span");
-		rdbtnDate.setActionCommand("Span");
+		rdbtnDate = new JRadioButton("Date");
+		rdbtnDate.setActionCommand("Date");
 		rdbtnDate.addActionListener(this);
 		
 		buttonGroup = new ButtonGroup();
@@ -151,48 +154,52 @@ public class DataTable implements ActionListener{
 		buttonGroup.add(rdbtnName);
 		buttonGroup.add(rdbtnDate);
 		
-		spanCombo = new JComboBox();
-		spanCombo.setModel(new DefaultComboBoxModel(new String[] {"One Hour", "One Day", "One Week"}));
-		
 		lblLastName = new JLabel("Last Name :");
 		
 		lastNameField = new JTextField();
 		lastNameField.setColumns(10);
+		
+		lblDate = new JLabel("Date :");
+		
+		dateField = new JTextField();
+		dateField.setColumns(10);
 		GroupLayout gl_filterPanel = new GroupLayout(filterPanel);
 		gl_filterPanel.setHorizontalGroup(
-			gl_filterPanel.createParallelGroup(Alignment.TRAILING)
+			gl_filterPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_filterPanel.createSequentialGroup()
-					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_filterPanel.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_filterPanel.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblCourse, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
 								.addComponent(lblLastName, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(Alignment.TRAILING, gl_filterPanel.createSequentialGroup()
+						.addGroup(gl_filterPanel.createSequentialGroup()
 							.addGap(10)
 							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_filterPanel.createSequentialGroup()
 									.addComponent(rdbtnName)
 									.addGap(3))
-								.addComponent(lblName, GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE))))
+								.addComponent(lblName, GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_filterPanel.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGap(15)
+							.addComponent(rdbtnDate, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_filterPanel.createSequentialGroup()
+							.addGap(18)
 							.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(spanCombo, GroupLayout.PREFERRED_SIZE, 162, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE))
-							.addGap(15))
-						.addGroup(Alignment.TRAILING, gl_filterPanel.createParallelGroup(Alignment.LEADING)
-							.addGroup(gl_filterPanel.createSequentialGroup()
-								.addGap(15)
-								.addComponent(rdbtnDate, GroupLayout.PREFERRED_SIZE, 67, GroupLayout.PREFERRED_SIZE))
-							.addGroup(gl_filterPanel.createSequentialGroup()
-								.addGap(18)
-								.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
-									.addComponent(lastNameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-									.addComponent(nameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-									.addComponent(courseField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)))))
+								.addComponent(lastNameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+								.addComponent(courseField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))))
 					.addGap(58))
+				.addGroup(gl_filterPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblDate, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
+					.addGap(26)
+					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)
+						.addComponent(dateField, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(57, Short.MAX_VALUE))
 		);
 		gl_filterPanel.setVerticalGroup(
 			gl_filterPanel.createParallelGroup(Alignment.LEADING)
@@ -214,10 +221,14 @@ public class DataTable implements ActionListener{
 						.addComponent(lblCourse)
 						.addComponent(courseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addComponent(spanCombo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addGroup(gl_filterPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_filterPanel.createSequentialGroup()
+							.addGap(3)
+							.addComponent(lblDate))
+						.addComponent(dateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(27)
 					.addComponent(btnFilter, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(430, Short.MAX_VALUE))
+					.addContainerGap(162, Short.MAX_VALUE))
 		);
 		filterPanel.setLayout(gl_filterPanel);
 		
@@ -236,20 +247,21 @@ public class DataTable implements ActionListener{
 		// TODO Auto-generated method stub
 		String choice = buttonGroup.getSelection().getActionCommand();
 		//System.out.println(choice);
-		if(choice.equals("Span")){
+		if(choice.equals("Date")){
 			nameField.setEnabled(false);
 			nameField.setText("");
 			lastNameField.setEnabled(false);
 			lastNameField.setText("");
 			courseField.setEnabled(false);
 			courseField.setText("");
-			spanCombo.setEnabled(true);
-			filterType = "Show Span";
+			dateField.setEnabled(true);
+			filterType = "Show Date";
 		}else if (choice.equals("Name")){
 			nameField.setEnabled(true);
 			lastNameField.setEnabled(true);
 			courseField.setEnabled(true);
-			spanCombo.setEnabled(false);
+			dateField.setEnabled(false);
+			dateField.setText("");
 			filterType = "Show Name";
 		}
 		/*else if(choice.equals("Filter")){
@@ -284,9 +296,21 @@ public class DataTable implements ActionListener{
 				sLogOut = list.getLog_out();
 				model.addRow(new Object[]{sFirstName, sLastName, sStudentNumber, sCourse, sLogIn, sLogOut});
 			}
-		}else if(filterType.equals("Show Span")){
+		}else if(filterType.equals("Show Date")){
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
+			results = databaseDriverManager.getStudentLogOnDate(dateField.getText());
 			model.setRowCount(0);
-			System.out.println("sjahska");
+			for(StudentLog list:results){
+				sFirstName = list.getFirstName();
+				sLastName = list.getLastName();
+				sStudentNumber = list.getStudentNumber();
+				sCourse = list.getCourse();
+				sLogIn = list.getLog_in();
+				sLogOut = list.getLog_out();
+				model.addRow(new Object[]{sFirstName, sLastName, sStudentNumber, sCourse, sLogIn, sLogOut});
+			}
+			
 		}
 	}
 }
